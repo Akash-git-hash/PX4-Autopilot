@@ -861,6 +861,7 @@ Commander::handle_command(const vehicle_command_s &cmd)
 
 	/* result of the command */
 	unsigned cmd_result = vehicle_command_ack_s::VEHICLE_CMD_RESULT_UNSUPPORTED;
+	bool already_answered = false;
 
 	/* request to set different system mode */
 	switch (cmd.command) {
@@ -1723,17 +1724,18 @@ Commander::handle_command(const vehicle_command_s &cmd)
 	case vehicle_command_s::VEHICLE_CMD_ESTIMATOR_SENSOR_ENABLE:
 	case vehicle_command_s::VEHICLE_CMD_ACTUATOR_GROUP_TEST:
 		/* ignore commands that are handled by other parts of the system */
+		already_answered = true;
 		break;
 
 	default:
 		/* Warn about unsupported commands, this makes sense because only commands
 		 * to this component ID (or all) are passed by mavlink. */
 		answer_command(cmd, vehicle_command_ack_s::VEHICLE_CMD_RESULT_UNSUPPORTED);
+		already_answered = true;
 		break;
 	}
 
-	if (cmd_result != vehicle_command_ack_s::VEHICLE_CMD_RESULT_UNSUPPORTED) {
-		/* already warned about unsupported commands in "default" case */
+	if (!already_answered) {
 		answer_command(cmd, cmd_result);
 	}
 

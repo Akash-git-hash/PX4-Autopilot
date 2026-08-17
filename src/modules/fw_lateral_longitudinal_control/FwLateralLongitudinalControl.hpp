@@ -63,6 +63,7 @@
 #include <uORB/PublicationMulti.hpp>
 #include <uORB/Subscription.hpp>
 #include <uORB/SubscriptionCallback.hpp>
+#include <uORB/SubscriptionMultiArray.hpp>
 #include <uORB/topics/airspeed_validated.h>
 #include <uORB/topics/fixed_wing_lateral_setpoint.h>
 #include <uORB/topics/fixed_wing_lateral_status.h>
@@ -116,7 +117,7 @@ private:
 
 	uORB::Subscription _airspeed_validated_sub{ORB_ID(airspeed_validated)};
 	uORB::Subscription _flaps_setpoint_sub{ORB_ID(flaps_setpoint)};
-	uORB::Subscription _fuel_tank_status_sub{ORB_ID(fuel_tank_status)};
+	uORB::SubscriptionMultiArray<fuel_tank_status_s> _fuel_tank_status_subs{ORB_ID::fuel_tank_status};
 	uORB::Subscription _wind_sub{ORB_ID(wind)};
 	uORB::SubscriptionData<vehicle_control_mode_s> _control_mode_sub{ORB_ID(vehicle_control_mode)};
 	uORB::SubscriptionData<vehicle_air_data_s> _vehicle_air_data_sub{ORB_ID(vehicle_air_data)};
@@ -209,7 +210,7 @@ private:
 
 	AlphaFilter<float> _fuel_fraction_filter;
 	hrt_abstime _time_last_fuel_fraction_update{0};
-	int _fuel_tank_id{-1}; ///< id of the tracked fuel tank, -1 until the first fuel tank status is received
+	bool _ignored_fuel_tank_reported{false}; ///< true if the warning about an ignored fuel tank id was already sent
 
 	perf_counter_t _loop_perf; // loop performance counter
 

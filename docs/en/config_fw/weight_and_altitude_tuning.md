@@ -38,7 +38,10 @@ The measured fuel level is low-pass filtered to reject fuel slosh.
 
 If no fuel data is available (no sensor, or the sensor fails before boot), the vehicle is assumed to be at full gross weight, which errs on the conservative side.
 If fuel data is lost mid-flight, the last known fuel state is kept.
-Only a single fuel tank is supported.
+
+Only the fuel tank with id `0` is used (the default id for single-tank systems).
+Multi-tank vehicles should publish the aggregated total fuel state as tank `0`.
+A warning is shown if fuel data is received but only from other tank ids.
 
 ## Air Density Compensation
 

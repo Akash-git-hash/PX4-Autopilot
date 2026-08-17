@@ -458,38 +458,48 @@ void FwLateralLongitudinalControl::updateFuelState()
 {
 	fuel_tank_status_s fuel_tank_status;
 
-	if (_fuel_tank_status_sub.update(&fuel_tank_status)) {
-		// only a single fuel tank is supported: use the first reported tank id and ignore all others
-		if (_fuel_tank_id < 0) {
-			_fuel_tank_id = fuel_tank_status.fuel_tank_id;
+	for (auto &sub : _fuel_tank_status_subs) {
+		if (!sub.update(&fuel_tank_status)) {
+			continue;
 		}
 
-		if (fuel_tank_status.fuel_tank_id != _fuel_tank_id) {
-			return;
+		// only the tank with id 0 is used for weight compensation, multi-tank systems
+		// are expected to publish an aggregated total as tank 0
+		if (fuel_tank_status.fuel_tank_id != 0) {
+			if (!_ignored_fuel_tank_reported && _performance_model.isFuelCompensationEnabled()) {
+				events::send<uint8_t>(events::ID("fw_lat_lon_ctl_fuel_tank_ignored"), events::Log::Warning,
+						      "Ignoring fuel tank status with tank id {1}, only tank 0 is used for weight compensation",
+						      fuel_tank_status.fuel_tank_id);
+				_ignored_fuel_tank_reported = true;
+			}
+
+			continue;
 		}
 
 		const float fuel_fraction_remaining = PerformanceModel::getFuelFractionRemaining(fuel_tank_status);
 
-		if (PX4_ISFINITE(fuel_fraction_remaining)) {
-			if (_time_last_fuel_fraction_update == 0) {
-				_fuel_fraction_filter.reset(fuel_fraction_remaining);
-
-			} else if (fuel_tank_status.timestamp > _time_last_fuel_fraction_update) {
-				const float dt = math::min((fuel_tank_status.timestamp - _time_last_fuel_fraction_update) * 1e-6f,
-							   FUEL_FRACTION_FILTER_MAX_DT);
-				_fuel_fraction_filter.update(fuel_fraction_remaining, dt);
-
-			} else {
-				// out-of-order sample
-				return;
-			}
-
-			_time_last_fuel_fraction_update = fuel_tank_status.timestamp;
-
-			_performance_model.setFuelFractionRemaining(_fuel_fraction_filter.getState());
-
-			_tecs.set_equivalent_airspeed_trim(_performance_model.getCalibratedTrimAirspeed());
+		if (!PX4_ISFINITE(fuel_fraction_remaining)) {
+			continue;
 		}
+
+		if (_time_last_fuel_fraction_update == 0) {
+			_fuel_fraction_filter.reset(fuel_fraction_remaining);
+
+		} else if (fuel_tank_status.timestamp > _time_last_fuel_fraction_update) {
+			const float dt = math::min((fuel_tank_status.timestamp - _time_last_fuel_fraction_update) * 1e-6f,
+						   FUEL_FRACTION_FILTER_MAX_DT);
+			_fuel_fraction_filter.update(fuel_fraction_remaining, dt);
+
+		} else {
+			// out-dated sample
+			continue;
+		}
+
+		_time_last_fuel_fraction_update = fuel_tank_status.timestamp;
+
+		_performance_model.setFuelFractionRemaining(_fuel_fraction_filter.getState());
+
+		_tecs.set_equivalent_airspeed_trim(_performance_model.getCalibratedTrimAirspeed());
 	}
 }
 

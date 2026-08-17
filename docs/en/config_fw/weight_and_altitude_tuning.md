@@ -23,6 +23,23 @@ You can determine the values by measuring the weight of the vehicle using a scal
 Scaling is performed when _both_ `WEIGHT_BASE` and `WEIGHT_GROSS` are greater than `0`, and will have no effect if the values are the same.
 See the [algorithms](#weight-and-density-compensation-algorithms) section below for more information.
 
+### Fuel Burn Compensation
+
+On combustion-engine vehicles a significant share of the takeoff weight is fuel, so the actual weight decreases considerably over the course of a flight.
+If a fuel tank sensor is present (publishing the [FuelTankStatus](../msg_docs/FuelTankStatus.md) message, for example from a [DroneCAN](../dronecan/index.md) engine ECU), PX4 can continuously reduce the weight used for scaling by the estimated weight of the burned fuel.
+
+To enable this, additionally set:
+
+- [WEIGHT_FUEL](../advanced_config/parameter_reference.md#WEIGHT_FUEL) — the weight of a full fuel load (tank capacity multiplied by fuel density).
+
+When `WEIGHT_FUEL` is greater than `0`, `WEIGHT_GROSS` must be set to the takeoff weight with a _full_ tank.
+The current weight is then computed from the measured fraction of fuel remaining, so no parameter update is needed when taking off with a partially filled tank.
+The measured fuel level is low-pass filtered to reject fuel slosh.
+
+If no fuel data is available (no sensor, or the sensor fails before boot), the vehicle is assumed to be at full gross weight, which errs on the conservative side.
+If fuel data is lost mid-flight, the last known fuel state is kept.
+Only a single fuel tank is supported.
+
 ## Air Density Compensation
 
 ### Specify a Service Ceiling

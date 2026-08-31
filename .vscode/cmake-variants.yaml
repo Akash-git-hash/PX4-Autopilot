@@ -496,3 +496,8 @@ CONFIG:
       buildType: MinSizeRel
       settings:
         CONFIG: x-mav_ap-h743v2_default
+    lumenier_lux-f765_default:
+      short: lumenier_lux-f765
+      buildType: MinSizeRel
+      settings:
+        CONFIG: lumenier_lux-f765_default

@@ -44,7 +44,7 @@ add_library(drivers_board
 	# manifest.c
 	# sdio.c
 	timer_config.cpp
-	# usb.c
+	usb.c
 	# toc.c
 )
 add_dependencies(drivers_board nuttx_context)

@@ -1,10 +1,10 @@
 {
-    "board_id": 250,
+    "board_id": 225,
     "magic": "PX4FWv1",
-    "description": "Firmware for the LUMENIER_LUX-F765 board",
+    "description": "Firmware for the Lumenier Lux-F765 board",
     "image": "",
     "build_time": 0,
-    "summary": "LUX-F765",
+    "summary": "Lux-F765",
     "version": "0.1",
     "image_size": 0,
     "image_maxsize": 2064384,

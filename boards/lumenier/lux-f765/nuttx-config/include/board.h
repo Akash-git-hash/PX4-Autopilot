@@ -32,8 +32,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ************************************************************************************/
-#ifndef __NUTTX_CONFIG_PX4_FMU_V5_INCLUDE_BOARD_H
-#define __NUTTX_CONFIG_PX4_FMU_V5_INCLUDE_BOARD_H
+// #ifndef __NUTTX_CONFIG_PX4_FMU_V5_INCLUDE_BOARD_H
+// #define __NUTTX_CONFIG_PX4_FMU_V5_INCLUDE_BOARD_H
+
+#ifndef __NUTTX_CONFIG_LUMENIER_LUX_F765_INCLUDE_BOARD_H
+#define __NUTTX_CONFIG_LUMENIER_LUX_F765_INCLUDE_BOARD_H
 
 /************************************************************************************
  * Included Files
@@ -54,7 +57,7 @@
  ************************************************************************************/
 
 /* Clocking *************************************************************************/
-/* The px4_fmu-v5  board provides the following clock sources:
+/* The lumenier_lux-765 board provides the following clock sources:
  *
  *   X301: 16 MHz crystal for HSE
  *
@@ -268,20 +271,13 @@
 /* LED index values for use with board_userled() */
 
 #define BOARD_LED1        0
-#define BOARD_LED2        1
-// #define BOARD_LED3        2
-// #define BOARD_NLEDS       3
-#define BOARD_NLEDS       2
-
-#define BOARD_LED_RED     BOARD_LED1
-// #define BOARD_LED_GREEN   BOARD_LED2
-// #define BOARD_LED_BLUE    BOARD_LED3
-#define BOARD_LED_BLUE    BOARD_LED2
+#define BOARD_NLEDS       1
+#define BOARD_LED_BLUE    BOARD_LED1
 
 /* LED bits for use with board_userled_all() */
 
 #define BOARD_LED1_BIT    (1 << BOARD_LED1)
-#define BOARD_LED2_BIT    (1 << BOARD_LED2)
+// #define BOARD_LED2_BIT    (1 << BOARD_LED2)
 // #define BOARD_LED3_BIT    (1 << BOARD_LED3)
 
 /* If CONFIG_ARCH_LEDS is defined, the usage by the board port is defined in
@@ -332,8 +328,8 @@
 #define GPIO_UART7_RX    GPIO_UART7_RX_1    /* PE7 */
 #define GPIO_UART7_TX    GPIO_UART7_TX_1    /* PE8 */
 
-#define GPIO_UART8_RX    GPIO_UART8_RX_0    /* PE1 */
-#define GPIO_UART8_TX    GPIO_UART8_TX_0    /* PE0 */
+#define GPIO_UART8_RX    GPIO_UART8_RX_0    /* PE0 */
+#define GPIO_UART8_TX    GPIO_UART8_TX_0    /* PE1 */
 
 /* USART8: has no remap
  *
@@ -355,24 +351,28 @@
 // #define GPIO_CAN3_TX     GPIO_CAN3_TX_1     /* PA15 */
 
 /* SPI
- * SPI1 sensors
- * SPI2 is FRAM.
- * SPI4 is BARO
- * SPI6 Reserved
+ * SPI1 - IMU
+ * SPI2 - FLASH
+ * SPI3 - OSD
+ * SPI4 - SDCARD
  *
  */
 
-// #define GPIO_SPI1_MISO   GPIO_SPI1_MISO_1   /* PA6 */
-// #define GPIO_SPI1_MOSI   GPIO_SPI1_MOSI_3   /* PD7 */
-// #define GPIO_SPI1_SCK    GPIO_SPI1_SCK_3    /* PG11 */
+#define GPIO_SPI1_MISO   GPIO_SPI1_MISO_1   /* PA6 */
+#define GPIO_SPI1_MOSI   GPIO_SPI1_MOSI_1   /* PA7 */
+#define GPIO_SPI1_SCK    GPIO_SPI1_SCK_1    /* PA5 */
 
-// #define GPIO_SPI2_MISO   GPIO_SPI2_MISO_3   /* PI2 */
-// #define GPIO_SPI2_MOSI   GPIO_SPI2_MOSI_3   /* PI3 */
-// #define GPIO_SPI2_SCK    GPIO_SPI2_SCK_5    /* PI1 */
+#define GPIO_SPI2_MISO   GPIO_SPI2_MISO_1   /* PB14 */
+#define GPIO_SPI2_MOSI   GPIO_SPI2_MOSI_1   /* PB15 */
+#define GPIO_SPI2_SCK    GPIO_SPI2_SCK_3    /* PB13 */
 
-// #define GPIO_SPI4_MISO   GPIO_SPI4_MISO_2   /* PE13 */
-// #define GPIO_SPI4_MOSI   GPIO_SPI4_MOSI_1   /* PE6 */
-// #define GPIO_SPI4_SCK    GPIO_SPI4_SCK_1    /* PE2 */
+#define GPIO_SPI3_MISO   GPIO_SPI3_MISO_2   /* PC11 */
+#define GPIO_SPI3_MOSI   GPIO_SPI3_MOSI_3   /* PC12 */
+#define GPIO_SPI3_SCK    GPIO_SPI3_SCK_2    /* PC10 */
+
+#define GPIO_SPI4_MISO   GPIO_SPI4_MISO_1   /* PE5 */
+#define GPIO_SPI4_MOSI   GPIO_SPI4_MOSI_1   /* PE6 */
+#define GPIO_SPI4_SCK    GPIO_SPI4_SCK_1    /* PE2 */
 
 // #define GPIO_SPI5_MISO   GPIO_SPI5_MISO_1   /* PF8 */
 // #define GPIO_SPI5_MOSI   GPIO_SPI5_MOSI_1   /* PF9 */
@@ -402,8 +402,8 @@
 // #define GPIO_I2C2_SCL GPIO_I2C2_SCL_2       /* PF1 */
 // #define GPIO_I2C2_SDA GPIO_I2C2_SDA_2       /* PF0 */
 
-// #define GPIO_I2C3_SCL GPIO_I2C3_SCL_2       /* PH7 */
-// #define GPIO_I2C3_SDA GPIO_I2C3_SDA_2       /* PH8 */
+#define GPIO_I2C3_SCL GPIO_I2C3_SCL_1       /* PA8 */
+#define GPIO_I2C3_SDA GPIO_I2C3_SDA_1       /* PC9 */
 
 // #define GPIO_I2C4_SCL GPIO_I2C4_SCL_2       /* PF14 */
 // #define GPIO_I2C4_SDA GPIO_I2C4_SDA_2       /* PF15 */

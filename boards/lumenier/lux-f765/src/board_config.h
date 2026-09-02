@@ -90,13 +90,12 @@
 
 /* LEDs are driven with push open drain to support Anode to 5V or 3.3V */
 
-#define GPIO_nLED_RED        /* PB1 */  (GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTB|GPIO_PIN1)
-#define GPIO_nLED_GREEN      /* PC6 */  (GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTC|GPIO_PIN6)
-#define GPIO_nLED_BLUE       /* PC7 */  (GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTC|GPIO_PIN7)
+// #define GPIO_nLED_RED        /* PB1 */  (GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTB|GPIO_PIN1)
+// #define GPIO_nLED_GREEN      /* PC6 */  (GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTC|GPIO_PIN6)
+#define GPIO_nLED_BLUE       /* PE4 */  (GPIO_OUTPUT|GPIO_OPENDRAIN|GPIO_SPEED_50MHz|GPIO_OUTPUT_SET|GPIO_PORTE|GPIO_PIN4)
 
 #define BOARD_HAS_CONTROL_STATUS_LEDS      1
-#define BOARD_OVERLOAD_LED     LED_RED
-#define BOARD_ARMED_STATE_LED  LED_BLUE
+#define BOARD_OVERLOAD_LED     LED_BLUE
 
 /*
  * ADC channels
@@ -290,7 +289,7 @@
  *
  * PA9  OTG_FS_VBUS VBUS sensing
  */
-// #define GPIO_OTGFS_VBUS         /* PA9 */ (GPIO_INPUT|GPIO_PULLDOWN|GPIO_SPEED_100MHz|GPIO_PORTA|GPIO_PIN9)
+#define GPIO_OTGFS_VBUS         /* PA9 */ (GPIO_INPUT|GPIO_PULLDOWN|GPIO_SPEED_100MHz|GPIO_PORTA|GPIO_PIN9)
 
 /* High-resolution timer */
 #define HRT_TIMER               8  /* use timer8 for the HRT */
@@ -371,13 +370,13 @@
  * this board support the ADC system_power interface, and therefore
  * provides the true logic GPIO BOARD_ADC_xxxx macros.
  */
-// #define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
+#define BOARD_ADC_USB_CONNECTED (px4_arch_gpioread(GPIO_OTGFS_VBUS))
 
-// #if BOARD_HAS_USB_VALID == 1
-// #  define BOARD_ADC_USB_VALID     (!px4_arch_gpioread(GPIO_nVDD_USB_VALID))
-// #else
-// #  define BOARD_ADC_USB_VALID     BOARD_ADC_USB_CONNECTED
-// #endif
+#if BOARD_HAS_USB_VALID == 1
+#  define BOARD_ADC_USB_VALID     (!px4_arch_gpioread(GPIO_nVDD_USB_VALID))
+#else
+#  define BOARD_ADC_USB_VALID     BOARD_ADC_USB_CONNECTED
+#endif
 
 /* FMUv5 never powers odd the Servo rail */
 
@@ -459,7 +458,7 @@ __BEGIN_DECLS
 
 // extern void stm32_spiinitialize(void);
 
-// extern void stm32_usbinitialize(void);
+extern void stm32_usbinitialize(void);
 
 extern void board_peripheral_reset(int ms);
 
